@@ -8,7 +8,7 @@ producer= KafkaProducer(bootstrap_servers='localhost:9092')
 topic_name= 'Twitter'
 
 def getTwitterData():
-    res=api.search("Java OR Python OR CPP")
+    res=api.search_tweets(q="Java OR Python OR CPP",lang="en")
     for i in res:
         record=''
         record+=str(i.user.id_str)
@@ -19,14 +19,15 @@ def getTwitterData():
         record+=';'
         record+=str(i.user.favourite_count)
         record+=';'
+
         producer.send(topic_name,str.encode(record))
 
 
-getTwitterData()
+getTwitterData()#batch records
 
 def PeriodicWork(interval):
     while True:
-        getTwitterData()
+        getTwitterData()#streaming records
         time.sleep(interval)
 
 PeriodicWork(60*0.1)
