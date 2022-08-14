@@ -1,33 +1,31 @@
+from asynchat import simple_producer
 from ensurepip import bootstrap
-import tweepy
+import googleapiclient.discovery
 import time
-from kafka import KafkaProducer
 from auth import *
+from kafka import *
+import pandas as pd
+import seaborn as snb
+import json
 
 producer= KafkaProducer(bootstrap_servers='localhost:9092')
 topic_name= 'Twitter'
+channel_id='UCBJycsmduvYEL83R_U4JriQ'
 
-def getTwitterData():
-    res=api.search_tweets(q="Java OR Python OR CPP",lang="en")
-    for i in res:
-        record=''
-        record+=str(i.user.id_str)
-        record+=';'
-        record+=str(i.user.followers_count)
-        record+=';'
-        record+=str(i.user.retweet_count)
-        record+=';'
-        record+=str(i.user.favourite_count)
-        record+=';'
+def getChannelStatus():
+    
+    request = youtube.channels().list(
+        part="snippet,contentDetails,statistics",
+        id=channel_id)
+    record = request.execute()
+    rec=json.dumps(record).encode('utf-8')
+    producer.send('values', rec)
 
-        producer.send(topic_name,str.encode(record))
-
-
-getTwitterData()#batch records
+getChannelStatus()#batch records
 
 def PeriodicWork(interval):
     while True:
-        getTwitterData()#streaming records
+        getChannelStatus()#streaming records
         time.sleep(interval)
 
 PeriodicWork(60*0.1)
