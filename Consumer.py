@@ -16,4 +16,3 @@ collection = client.values.values
 for message in consumer:
     message = message.value
     collection.insert_one(message)
-    print('{} added to {}'.format(message, collection))
