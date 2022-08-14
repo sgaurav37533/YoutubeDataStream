@@ -8,11 +8,11 @@ import seaborn as snb
 import json
 from pymongo import *
 
+client = MongoClient('localhost:27017')
+collection = client.value
+
 consumer = KafkaConsumer('values',bootstrap_servers=['localhost:9092'])
 
-client = MongoClient('localhost:27017')
-collection = client.values.values
-
 for message in consumer:
-    message = message.value
+    message = message.values
     collection.insert_one(message)

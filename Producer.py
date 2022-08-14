@@ -10,7 +10,7 @@ import json
 
 producer= KafkaProducer(bootstrap_servers='localhost:9092')
 topic_name= 'Twitter'
-channel_id='UCBJycsmduvYEL83R_U4JriQ'
+channel_id='UCX6OQ3DkcsbYNE6H8uQQuVA'
 
 def getChannelStatus():
     
