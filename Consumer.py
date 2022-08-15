@@ -9,7 +9,7 @@ import json
 from pymongo import *
 
 client = MongoClient('localhost:27017')
-collection = client.value
+collection = client.db.customers
 
 consumer = KafkaConsumer('values',bootstrap_servers=['localhost:9092'])
 
